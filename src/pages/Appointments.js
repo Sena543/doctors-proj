@@ -1,7 +1,25 @@
+import { useQuery } from "@apollo/client";
 import { Divider, makeStyles, Typography } from "@material-ui/core";
-import React from "react";
+import gql from "graphql-tag";
+import React, { useContext } from "react";
 import Names from "../components/appointments/Names";
 import SearchBar from "../components/appointments/SearchBar";
+import GlobalIDContext from "../context/UserID";
+
+const GET_DOCTOR_APPOINTMENTS = gql`
+	query($doctorID: ID!) {
+		getDoctorAppointments(doctorID: $doctorID) {
+			appointmentStartTime
+			appointmentDate
+			arrivalConfirmation
+			checkupType
+			studentID {
+				gender
+				studentName
+			}
+		}
+	}
+`;
 
 const useStyles = makeStyles({
 	root: {
@@ -28,10 +46,19 @@ const useStyles = makeStyles({
 		width: "95%",
 		marginBottom: "1em",
 	},
-
 });
 export default function Appointments() {
 	const classes = useStyles();
+	const { user } = useContext(GlobalIDContext);
+	const { loading, error, data } = useQuery(GET_DOCTOR_APPOINTMENTS, {
+		onError: (e) => {
+			console.log(e);
+		},
+		onCompleted: (d) => {
+			console.log(d);
+		},
+		variables: { doctorID: user },
+	});
 	const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	const currentDate = new Date();
 	const dayNum = currentDate.getDay();
@@ -111,6 +138,14 @@ export default function Appointments() {
 			arrivalConfirmation: null,
 		},
 	];
+
+	if (loading) {
+		<Typography>Loading data</Typography>;
+	}
+	// console.log(data);o
+	if (error) {
+		console.log(error);
+	}
 	return (
 		<div className={classes.root}>
 			<div style={{ height: "5em", justifyContent: "center", alignItems: "center" }}>

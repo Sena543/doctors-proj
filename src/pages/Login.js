@@ -1,6 +1,15 @@
 import { makeStyles, TextField, InputAdornment, IconButton, Icon, Button } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { useMutation, gql } from "@apollo/client";
 import React, { useState } from "react";
+
+const LOGIN_USER = gql`
+	mutation($studentID: ID!, $password: String!) {
+		loginUser(studentID: $studentID, password: $password) {
+			token
+		}
+	}
+`;
 
 const useStyles = makeStyles({
 	root: {
@@ -24,22 +33,29 @@ const useStyles = makeStyles({
 
 export default function Login() {
 	const classes = useStyles();
+	const [loginUser] = useMutation(LOGIN_USER, {
+		onCompleted: (response) => {
+			// console.log(response?.loginUser?.token);
+			sessionStorage.setItem("auth_token", response?.loginUser?.token);
+			window.location = "/";
+		},
+	});
 	const [userDetails, setUserDetails] = useState({
 		staffID: "",
-		passowrd: "",
+		password: "",
 	});
 	const [inputSettings, setInputSettings] = useState({
 		staffIDError: false,
 		staffIDErrorMsgs: "",
-		passowrdError: false,
-		passowrdErrorMsgs: "",
+		passwordError: false,
+		passwordErrorMsgs: "",
 		showPassword: false,
 	});
 	document.title = "Login";
 
 	const handleLogin = (e) => {
 		e.preventDefault();
-		setInputSettings({ ...inputSettings, staffIDError: false, passowrdError: false });
+		setInputSettings({ ...inputSettings, staffIDError: false, passwordError: false });
 		if (userDetails.staffID === "") {
 			setInputSettings({
 				...inputSettings,
@@ -50,13 +66,14 @@ export default function Login() {
 		} else if (userDetails.passowrd === "") {
 			setInputSettings({
 				...inputSettings,
-				passowrdError: true,
-				passowrdErrorMsgs: "Password is required",
+				passwordError: true,
+				passwordErrorMsgs: "Password is required",
 			});
 			return;
 		}
-		console.log(userDetails);
+		loginUser({ variables: { studentID: userDetails.staffID, password: userDetails.password } });
 	};
+
 	return (
 		<div className={classes.root}>
 			<div style={{ display: "flex" }}>
@@ -101,8 +118,8 @@ export default function Login() {
 						className={classes.textField}
 						label="Password"
 						onChange={(e) => {
-							setInputSettings({ ...inputSettings, passowrdError: false });
-							setUserDetails({ ...userDetails, passowrd: e.target.value });
+							setInputSettings({ ...inputSettings, passwordError: false });
+							setUserDetails({ ...userDetails, password: e.target.value });
 						}}
 						value={userDetails.passowrd}
 						margin="normal"
@@ -112,8 +129,8 @@ export default function Login() {
 						type={inputSettings.showPassword ? "text" : "password"}
 						id="password"
 						autoComplete="current-password"
-						error={inputSettings.passowrdError}
-						helperText={inputSettings.passowrdError ? inputSettings.passowrdErrorMsgs : null}
+						error={inputSettings.passwordError}
+						helperText={inputSettings.passwordError ? inputSettings.passwordErrorMsgs : null}
 						InputProps={{
 							endAdornment: (
 								<InputAdornment position="end">
