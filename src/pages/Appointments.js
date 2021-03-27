@@ -1,10 +1,13 @@
-import { Container, Divider, makeStyles, Paper, TextField, Typography } from "@material-ui/core";
-import { green } from "@material-ui/core/colors";
+import { Divider, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 import Names from "../components/appointments/Names";
 import SearchBar from "../components/appointments/SearchBar";
 
 const useStyles = makeStyles({
+	root: {
+		display: "flex",
+		flexDirection: "column",
+	},
 	paperDiv: {
 		display: "flex",
 		flexDirection: "column",
@@ -85,20 +88,50 @@ export default function Appointments() {
 			officeNumber: "B9",
 			arrivalConfirmation: null,
 		},
+		{
+			id: "97845",
+			name: "Clark Kent",
+			checkupType: "x-ray",
+			officeNumber: "B9",
+			arrivalConfirmation: null,
+		},
+		{
+			id: "97845",
+			name: "Clark Kent",
+			checkupType: "x-ray",
+			officeNumber: "B9",
+			arrivalConfirmation: null,
+		},
+		{
+			id: "97845",
+			name: "Clark Kent",
+			checkupType: "x-ray",
+			officeNumber: "B9",
+			arrivalConfirmation: null,
+		},
 	];
 	return (
-		<div>
-			<div>
+		<div className={classes.root}>
+			<div style={{ height: "5em", justifyContent: "center", alignItems: "center" }}>
 				<SearchBar />
-				<Divider />
 			</div>
-			<div style={{ display: "flex", justifyContent: "space-between" }}>
-				<Typography>
+			<Divider />
+			<div style={{ display: "flex", justifyContent: "space-between", height: "2em", margin: "2em" }}>
+				<Typography style={{ position: "relative", left: 310, color: "#3036FF" }}>
 					{days[dayNum]} {`${day}/${month}/${year}`}
 				</Typography>
-				<Typography>9:00</Typography>
+				<Typography style={{ position: "relative", right: 110, color: "#3036FF" }}>9:00</Typography>
 			</div>
-	<Names namesList={namesList}/>
+			{namesList &&
+				namesList.map(({ name, officeNumber, arrivalConfirmation, id, checkupType }) => (
+					<Names
+						name={name}
+						officeNumber={officeNumber}
+						id={id}
+						checkupType={checkupType}
+						arrivalConfirmation={arrivalConfirmation}
+					/>
+				))}
 		</div>
 	);
 }

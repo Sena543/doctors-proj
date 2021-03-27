@@ -25,11 +25,14 @@ import React from "react";
 
 const useStyles = makeStyles({
 	root: {
-		width: "80%",
+		width: "100%",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	textField: {
-		width: "30em",
+		width: "50%",
 		borderColor: "#F1F3F6",
+		margin: 10,
 	},
 });
 export default function SearchBar() {
