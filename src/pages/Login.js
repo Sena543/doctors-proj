@@ -10,14 +10,15 @@ const useStyles = makeStyles({
 		alignItems: "center",
 	},
 	textField: {
-		width: "40%",
-		position: "relative",
-		left: "20em",
+		width: "30em",
+		// position: "relative",
+		// left: "20em",
 	},
 	button: {
-		width: "4em",
+		width: "5em",
 		position: "relative",
-		left: "20em",
+		left: "40%",
+		top: "2em",
 	},
 });
 
@@ -34,6 +35,7 @@ export default function Login() {
 		passowrdErrorMsgs: "",
 		showPassword: false,
 	});
+	document.title = "Login";
 
 	const handleLogin = (e) => {
 		e.preventDefault();
@@ -44,13 +46,16 @@ export default function Login() {
 				staffIDError: true,
 				staffIDErrorMsgs: "Staff ID is required",
 			});
+			return;
 		} else if (userDetails.passowrd === "") {
 			setInputSettings({
 				...inputSettings,
 				passowrdError: true,
 				passowrdErrorMsgs: "Password is required",
 			});
+			return;
 		}
+		console.log(userDetails);
 	};
 	return (
 		<div className={classes.root}>
@@ -63,17 +68,14 @@ export default function Login() {
 					flexDirection: "column",
 					width: "100%",
 					height: "20em",
-					backgroundColor: "beige",
-					justifyContent: "space-between",
+					// backgroundColor: "beige",
+					justifyContent: "center",
+					alignItems: "center",
 				}}>
 				<form
 					style={{
 						display: "flex",
 						flexDirection: "column",
-						width: "100%",
-						height: "10em",
-						backgroundColor: "beige",
-						justifyContent: "space-between",
 					}}
 					onSubmit={handleLogin}
 					noValidate>
@@ -135,6 +137,7 @@ export default function Login() {
 						className={classes.button}
 						type="submit"
 						fullWidth
+						disableFocusRipple
 						variant="contained"
 						color="primary">
 						Login
