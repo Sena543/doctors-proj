@@ -1,12 +1,29 @@
 import { Container, Divider, makeStyles, Paper, TextField, Typography } from "@material-ui/core";
+import { green } from "@material-ui/core/colors";
 import React from "react";
+import Names from "../components/appointments/Names";
 import SearchBar from "../components/appointments/SearchBar";
 
 const useStyles = makeStyles({
+	paperDiv: {
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+		marginRight: "15%",
+		marginLeft: "5%",
+	},
 	paper: {
 		display: "flex",
 		flexDirection: "rows",
-		justifyContent: "space-between",
+		justifyContent: "space-evenly",
+		alignItems: "center",
+		height: "5em",
+		// position: "relative",
+		// left: "5%",
+		marginLeft: "15%",
+		marginRight: "15%",
+		width: "95%",
+		marginBottom: "1em",
 	},
 });
 export default function Appointments() {
@@ -17,7 +34,58 @@ export default function Appointments() {
 	const day = currentDate.getDate();
 	const month = currentDate.getMonth() + 1;
 	const year = currentDate.getFullYear();
-	console.log(dayNum);
+
+	const namesList = [
+		{
+			id: "12345678",
+			name: "Clark Kent",
+			checkupType: "x-ray",
+			officeNumber: "B9",
+			arrivalConfirmation: true,
+		},
+		{
+			id: "98765432",
+			name: "Clark Kent",
+			checkupType: "x-ray",
+			officeNumber: "B9",
+			arrivalConfirmation: true,
+		},
+		{
+			id: "0987890",
+			name: "Clark Kent",
+			checkupType: "x-ray",
+			officeNumber: "B9",
+			arrivalConfirmation: true,
+		},
+		{
+			id: "13213",
+			name: "Clark Kent",
+			checkupType: "x-ray",
+			officeNumber: "B9",
+			arrivalConfirmation: true,
+		},
+		{
+			id: "123434",
+			name: "Clark Kent",
+			checkupType: "x-ray",
+			officeNumber: "B9",
+			arrivalConfirmation: null,
+		},
+		{
+			id: "32332324",
+			name: "Clark Kent",
+			checkupType: "x-ray",
+			officeNumber: "B9",
+			arrivalConfirmation: true,
+		},
+		{
+			id: "97845",
+			name: "Clark Kent",
+			checkupType: "x-ray",
+			officeNumber: "B9",
+			arrivalConfirmation: null,
+		},
+	];
 	return (
 		<div>
 			<div>
@@ -30,15 +98,7 @@ export default function Appointments() {
 				</Typography>
 				<Typography>9:00</Typography>
 			</div>
-			<div>
-				<Paper elevation={0} variant="outlined" className={classes.paper}>
-					<Typography>12345678</Typography>
-					<Typography>Elizabeth Keen</Typography>
-					<Typography>x-ray</Typography>
-					<Typography>B9</Typography>
-					<Typography>Confirmed</Typography>
-				</Paper>
-			</div>
+	<Names namesList={namesList}/>
 		</div>
 	);
 }

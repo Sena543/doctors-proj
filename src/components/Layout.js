@@ -68,7 +68,7 @@ export default function Layout({ children }) {
 					))}
 				</List>
 			</Drawer>
-			<div>{children}</div>
+			<div style={{ width: "100%" }}>{children}</div>
 		</div>
 	);
 }
