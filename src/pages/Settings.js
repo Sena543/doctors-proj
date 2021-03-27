@@ -1,5 +1,11 @@
 import React from "react";
+import Login from "./Login";
 
 export default function Settings() {
-	return <div>Settings</div>;
+	return (
+		<div>
+			<div>Change Appointment</div>
+			<Login />
+		</div>
+	);
 }

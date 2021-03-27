@@ -95,7 +95,12 @@ export default function ManageAppointments() {
 	];
 	return (
 		<div className={classes.root}>
-			<div style={{ height: "5em", justifyContent: "center", alignItems: "center" }}>
+			<div
+				style={{
+					height: "5em",
+					justifyContent: "center",
+					alignItems: "center",
+				}}>
 				<SearchBar />
 			</div>
 			<Divider />
