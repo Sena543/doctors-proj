@@ -28,6 +28,7 @@ const useStyles = makeStyles({
 		width: "95%",
 		marginBottom: "1em",
 	},
+
 });
 export default function Appointments() {
 	const classes = useStyles();
