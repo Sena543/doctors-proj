@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { Divider, makeStyles, Typography } from "@material-ui/core";
 import gql from "graphql-tag";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Names from "../components/appointments/Names";
 import SearchBar from "../components/appointments/SearchBar";
 import GlobalIDContext from "../context/UserID";
@@ -16,6 +16,10 @@ const GET_DOCTOR_APPOINTMENTS = gql`
 			studentID {
 				gender
 				studentName
+				studentID
+			}
+			doctorID {
+				officeNumber
 			}
 		}
 	}
@@ -50,14 +54,17 @@ const useStyles = makeStyles({
 export default function Appointments() {
 	const classes = useStyles();
 	const { user } = useContext(GlobalIDContext);
+	const [appointmentList, setAppointmentList] = useState();
 	const { loading, error, data } = useQuery(GET_DOCTOR_APPOINTMENTS, {
 		onError: (e) => {
 			console.log(e);
 		},
 		onCompleted: (d) => {
 			console.log(d);
+			setAppointmentList(d.getDoctorAppointments);
 		},
-		variables: { doctorID: user },
+		variables: { doctorID: "09876543" },
+		// variables: { doctorID: user },
 	});
 	const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	const currentDate = new Date();
@@ -65,79 +72,6 @@ export default function Appointments() {
 	const day = currentDate.getDate();
 	const month = currentDate.getMonth() + 1;
 	const year = currentDate.getFullYear();
-
-	const namesList = [
-		{
-			id: "12345678",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: true,
-		},
-		{
-			id: "98765432",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: true,
-		},
-		{
-			id: "0987890",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: true,
-		},
-		{
-			id: "13213",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: true,
-		},
-		{
-			id: "123434",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: null,
-		},
-		{
-			id: "32332324",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: true,
-		},
-		{
-			id: "97845",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: null,
-		},
-		{
-			id: "97845",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: null,
-		},
-		{
-			id: "97845",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: null,
-		},
-		{
-			id: "97845",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: null,
-		},
-	];
 
 	if (loading) {
 		<Typography>Loading data</Typography>;
@@ -158,12 +92,12 @@ export default function Appointments() {
 				</Typography>
 				<Typography style={{ position: "relative", right: 110, color: "#3036FF" }}>9:00</Typography>
 			</div>
-			{namesList &&
-				namesList.map(({ name, officeNumber, arrivalConfirmation, id, checkupType }) => (
+			{appointmentList &&
+				appointmentList.map(({ arrivalConfirmation, studentID, checkupType, doctorID }) => (
 					<Names
-						name={name}
-						officeNumber={officeNumber}
-						id={id}
+						name={studentID.studentName}
+						officeNumber={doctorID.officeNumber}
+						id={studentID.studentID}
 						checkupType={checkupType}
 						arrivalConfirmation={arrivalConfirmation}
 					/>
