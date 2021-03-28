@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Divider, makeStyles, Typography } from "@material-ui/core";
+import { Divider, makeStyles, Paper, Typography } from "@material-ui/core";
 import gql from "graphql-tag";
 import React, { useContext, useState } from "react";
 import Names from "../components/appointments/Names";
@@ -50,11 +50,20 @@ const useStyles = makeStyles({
 		width: "95%",
 		marginBottom: "1em",
 	},
+	nullApp: {
+		position: "relative",
+		left: "25%",
+		width: "50%",
+		height: "5em",
+		top: "50%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
 });
 export default function Appointments() {
 	const classes = useStyles();
 	const { user } = useContext(GlobalIDContext);
-	const [appointmentList, setAppointmentList] = useState();
+	const [appointmentList, setAppointmentList] = useState([]);
 	const { loading, error, data } = useQuery(GET_DOCTOR_APPOINTMENTS, {
 		onError: (e) => {
 			console.log(e);
@@ -63,8 +72,8 @@ export default function Appointments() {
 			console.log(d);
 			setAppointmentList(d.getDoctorAppointments);
 		},
-		variables: { doctorID: "09876543" },
-		// variables: { doctorID: user },
+		// variables: { doctorID: "09876543" },
+		variables: { doctorID: user },
 	});
 	const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	const currentDate = new Date();
@@ -74,9 +83,8 @@ export default function Appointments() {
 	const year = currentDate.getFullYear();
 
 	if (loading) {
-		<Typography>Loading data</Typography>;
+		return <Typography>Loading data</Typography>;
 	}
-	// console.log(data);o
 	if (error) {
 		console.log(error);
 	}
@@ -92,7 +100,14 @@ export default function Appointments() {
 				</Typography>
 				<Typography style={{ position: "relative", right: 110, color: "#3036FF" }}>9:00</Typography>
 			</div>
-			{appointmentList &&
+			{appointmentList.length === 0 ? (
+				<div style={{ marginBottom: "40em", justifyContent: "center", alignItems: "center" }}>
+					<Paper variant="outlined" className={classes.nullApp}>
+						<Typography variant="h4">No appointmens booked Today</Typography>
+					</Paper>
+				</div>
+			) : (
+				appointmentList &&
 				appointmentList.map(({ arrivalConfirmation, studentID, checkupType, doctorID }) => (
 					<Names
 						name={studentID.studentName}
@@ -101,7 +116,8 @@ export default function Appointments() {
 						checkupType={checkupType}
 						arrivalConfirmation={arrivalConfirmation}
 					/>
-				))}
+				))
+			)}
 		</div>
 	);
 }

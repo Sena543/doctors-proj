@@ -2,6 +2,7 @@ import { makeStyles, TextField, InputAdornment, IconButton, Icon, Button } from 
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { useMutation, gql } from "@apollo/client";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const LOGIN_USER = gql`
 	mutation($studentID: ID!, $password: String!) {
@@ -16,6 +17,7 @@ const useStyles = makeStyles({
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
+		// backgroundColor: "#fff",
 		alignItems: "center",
 	},
 	textField: {
@@ -160,6 +162,9 @@ export default function Login() {
 						Login
 					</Button>
 				</form>
+				<div style={{ position: "relative", top: "20%", right: "1%" }}>
+					<Link to="signup">Sign up</Link>
+				</div>
 			</div>
 		</div>
 	);

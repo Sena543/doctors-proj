@@ -10,6 +10,7 @@ import { setContext } from "@apollo/client/link/context";
 import jwtDecode from "jwt-decode";
 import GlobalIDContext from "./context/UserID";
 import { onError } from "@apollo/client/link/error";
+import Signup from "./pages/Signup";
 
 const httpLink = createHttpLink({ uri: "http://localhost:9000/" });
 const authLink = setContext((_, { headers }) => {
@@ -63,6 +64,9 @@ function App() {
 					<Router>
 						<Switch>
 							<Route path="/login">{isLoggedIn ? <Redirect to="/" /> : <Login />}</Route>
+							<Route path="/signup">
+								<Signup />
+							</Route>
 							<Layout>
 								<Route exact path="/">
 									<Appointments />

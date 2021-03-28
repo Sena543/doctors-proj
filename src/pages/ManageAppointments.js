@@ -1,7 +1,31 @@
-import { makeStyles, Button, Divider } from "@material-ui/core";
-import React from "react";
+import { makeStyles, Divider, Paper, Typography } from "@material-ui/core";
+import React, { useState, useContext } from "react";
 import Names from "../components/appointments/Names";
 import SearchBar from "../components/appointments/SearchBar";
+import gql from "graphql-tag";
+import { useQuery } from "@apollo/client";
+import { Spinner } from "react-activity";
+import "react-activity/dist/react-activity.css";
+import GlobalIDContext from "../context/UserID";
+
+const GET_DOCTOR_APPOINTMENTS = gql`
+	query($doctorID: ID!) {
+		getDoctorAppointments(doctorID: $doctorID) {
+			appointmentStartTime
+			appointmentDate
+			arrivalConfirmation
+			checkupType
+			studentID {
+				gender
+				studentName
+				studentID
+			}
+			doctorID {
+				officeNumber
+			}
+		}
+	}
+`;
 
 const useStyles = makeStyles({
 	root: {
@@ -18,81 +42,40 @@ const useStyles = makeStyles({
 		width: "5em",
 		color: "#ffffff",
 	},
+	nullApp: {
+		position: "relative",
+		left: "25%",
+		width: "50%",
+		height: "5em",
+		top: "50%",
+		justifyContent: "center",
+		alignItems: "center",
+	},
 });
 export default function ManageAppointments() {
 	const classes = useStyles();
-	const namesList = [
-		{
-			id: "12345678",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: true,
+	const { user } = useContext(GlobalIDContext);
+	const [appointmentList, setAppointmentList] = useState([]);
+	const { loading, error, data } = useQuery(GET_DOCTOR_APPOINTMENTS, {
+		onError: (e) => {
+			console.log(e);
 		},
-		{
-			id: "98765432",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: true,
+		onCompleted: (d) => {
+			console.log(d);
+			setAppointmentList(d.getDoctorAppointments);
 		},
-		{
-			id: "0987890",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: true,
-		},
-		{
-			id: "13213",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: true,
-		},
-		{
-			id: "123434",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: null,
-		},
-		{
-			id: "32332324",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: true,
-		},
-		{
-			id: "97845",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: null,
-		},
-		{
-			id: "97845",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: null,
-		},
-		{
-			id: "97845",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: null,
-		},
-		{
-			id: "97845",
-			name: "Clark Kent",
-			checkupType: "x-ray",
-			officeNumber: "B9",
-			arrivalConfirmation: null,
-		},
-	];
+		// variables: { doctorID: "09876543" },
+		variables: { doctorID: user },
+	});
+
+	if (loading) {
+		return (
+			<div style={{ position: "relative", left: "50%", top: "50%" }}>
+				<Spinner color="#3036FF" />
+			</div>
+		);
+	}
+
 	return (
 		<div className={classes.root}>
 			<div
@@ -104,29 +87,24 @@ export default function ManageAppointments() {
 				<SearchBar />
 			</div>
 			<Divider />
-			{namesList &&
-				namesList.map(({ name, officeNumber, arrivalConfirmation, id, checkupType }) => (
-					<>
-						<Names
-							name={name}
-							officeNumber={officeNumber}
-							id={id}
-							checkupType={checkupType}
-							arrivalConfirmation={arrivalConfirmation}
-						/>
-						<div
-							style={{
-								display: "flex",
-								justifyContent: "space-evenly",
-								position: "relative",
-								bottom: 20,
-							}}>
-							<Button className={classes.replaceButton}>Replace</Button>
-							<Button className={classes.reschedule}>Replace</Button>
-							{/* <Button style={{ width: "1em", backgroudColor: "#1407C7" }}>Replace</Button> */}
-						</div>
-					</>
-				))}
+			{appointmentList.length === 0 ? (
+				<div style={{ marginBottom: "48em", justifyContent: "center", alignItems: "center" }}>
+					<Paper variant="outlined" className={classes.nullApp}>
+						<Typography variant="h4">No appointmens booked Today</Typography>
+					</Paper>
+				</div>
+			) : (
+				appointmentList &&
+				appointmentList.map(({ arrivalConfirmation, studentID, checkupType, doctorID }) => (
+					<Names
+						name={studentID.studentName}
+						officeNumber={doctorID.officeNumber}
+						id={studentID.studentID}
+						checkupType={checkupType}
+						arrivalConfirmation={arrivalConfirmation}
+					/>
+				))
+			)}
 		</div>
 	);
 }
