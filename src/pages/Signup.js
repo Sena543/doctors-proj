@@ -1,7 +1,37 @@
 import { Button, makeStyles, TextField, Icon, InputAdornment, IconButton } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { Add, Visibility, VisibilityOff } from "@material-ui/icons";
 import React, { useState } from "react";
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/client";
+
+const SIGNUP_DOCTOR = gql`
+	mutation(
+		$doctorID: ID!
+		$doctorName: String!
+		$email: String!
+		$timesAvailable: [String!]!
+		$password: String!
+		$officeNumber: String!
+	) {
+		addNewDoctor(
+			input: {
+				doctorID: $doctorID
+				doctorName: $doctorName
+				email: $email
+				timesAvailable: $timesAvailable
+				password: $password
+				officeNumber: $officeNumber
+			}
+		) {
+			doctorID
+			doctorName
+			email
+			officeNumber
+			timesAvailable
+		}
+	}
+`;
 
 const useStyles = makeStyles({
 	root: {
@@ -28,10 +58,23 @@ const useStyles = makeStyles({
 		position: "relative",
 		left: "35%",
 	},
+	icon: {
+		position: "relative",
+	},
+	select: {
+		width: "15em",
+		height: "3em",
+		borderRadius: 10,
+	},
 });
 
 export default function Signup() {
 	const classes = useStyles();
+	const [addNewDoctor] = useMutation(SIGNUP_DOCTOR, {
+		onCompleted: () => {
+			window.location = "/login";
+		},
+	});
 	const [signupDetails, setSignupDetails] = useState({
 		doctorName: "",
 		doctorID: "",
@@ -41,16 +84,30 @@ export default function Signup() {
 		confirmPassword: "",
 		timesAvailable: [],
 	});
+	const [times, setTimes] = useState("6:00-7:00");
 	const [showPass, setShowPass] = useState(false);
+	const timeList = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 1, 2, 3, 4, 5];
+
+	const renderTimes = timeList.map((t) => (
+		<option key={t} style={{ height: "2em" }} value={`${t}:00-${t + 1}:00`}>
+			{`${t}:00-${t + 1}:00`}
+		</option>
+	));
+
 	const handleTextChange = (name, value) => {
 		setSignupDetails({ ...signupDetails, [name]: value });
+	};
+
+	const handleSignup = (event) => {
+		event.preventDefault();
+		addNewDoctor({ variables: { ...signupDetails } });
 	};
 	return (
 		<div className={classes.root}>
 			<div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
 				<img src={`${process.env.PUBLIC_URL}/medicalLogo.png`} width="10%" height="10%" alt="logo" />
 			</div>
-			<form className={classes.form} noValidate>
+			<form className={classes.form} noValidate onSubmit={handleSignup}>
 				<TextField
 					className={classes.textField}
 					variant="outlined"
@@ -160,6 +217,40 @@ export default function Signup() {
 					}}
 					helperText={!Boolean(signupDetails.confirmPassword) ? "This field is required" : null}
 				/>
+				<div
+					style={{
+						position: "relative",
+						left: 20,
+						flexBasis: "row",
+						display: "flex",
+						flexDirection: "column",
+					}}>
+					<div>
+						<select
+							value={times}
+							onChange={(e) => setTimes(e.target.value)}
+							className={classes.select}>
+							{renderTimes}
+						</select>
+						<IconButton
+							className={classes.icon}
+							onClick={() =>
+								setSignupDetails({
+									...signupDetails,
+									timesAvailable: [...signupDetails.timesAvailable, times],
+								})
+							}>
+							<Add color="primary" />
+						</IconButton>
+					</div>
+					<div>
+						{signupDetails.timesAvailable.map((time) => (
+							<ul style={{ listStyleType: "none", float: "left" }}>
+								<li>{time}</li>
+							</ul>
+						))}
+					</div>
+				</div>
 				<Button
 					className={classes.button}
 					type="submit"
