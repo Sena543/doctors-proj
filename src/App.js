@@ -11,6 +11,7 @@ import jwtDecode from "jwt-decode";
 import GlobalIDContext from "./context/UserID";
 import { onError } from "@apollo/client/link/error";
 import Signup from "./pages/Signup";
+import ChangeSchedule from "./pages/ChangeSchedule";
 
 const httpLink = createHttpLink({ uri: "http://localhost:9000/" });
 const authLink = setContext((_, { headers }) => {
@@ -74,7 +75,10 @@ function App() {
 								<Route path="/manage-appointments">
 									<ManageAppointments />
 								</Route>
-								<Route path="/settings">
+								<Route path="/settings/change-schedule">
+									<ChangeSchedule />
+								</Route>
+								<Route exact path="/settings">
 									<Settings />
 								</Route>
 								<Route path="/">

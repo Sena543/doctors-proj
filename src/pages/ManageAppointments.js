@@ -88,7 +88,13 @@ export default function ManageAppointments() {
 			</div>
 			<Divider />
 			{appointmentList.length === 0 ? (
-				<div style={{ marginBottom: "48em", justifyContent: "center", alignItems: "center" }}>
+				<div
+					style={{
+						marginBottom: "48em",
+						justifyContent: "center",
+						alignItems: "center",
+						marginTop: "10em",
+					}}>
 					<Paper variant="outlined" className={classes.nullApp}>
 						<Typography variant="h4">No appointmens booked Today</Typography>
 					</Paper>
