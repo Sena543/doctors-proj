@@ -13,7 +13,9 @@ import { onError } from "@apollo/client/link/error";
 import Signup from "./pages/Signup";
 import ChangeSchedule from "./pages/ChangeSchedule";
 
-const httpLink = createHttpLink({ uri: "http://localhost:9000/" });
+const uri = "https://immense-savannah-88207.herokuapp.com";
+// const uri: "http://localhost:9000/
+const httpLink = createHttpLink({ uri });
 const authLink = setContext((_, { headers }) => {
 	// get the authentication token from local storage if it exists
 	const token = sessionStorage.getItem("auth_token");
