@@ -1,4 +1,4 @@
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from "@material-ui/core";
+import { Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles } from "@material-ui/core";
 import { BorderColorRounded, ListRounded, SettingsRounded } from "@material-ui/icons";
 import React from "react";
 import { useHistory, useLocation } from "react-router";
@@ -57,14 +57,17 @@ export default function Layout({ children }) {
 				{/* link list */}
 				<List>
 					{menuItems.map(({ text, path, icon }) => (
-						<ListItem
-							button
-							key={text}
-							onClick={() => history.push(path)}
-							className={location.pathname === path ? classes.active : null}>
-							<ListItemIcon>{icon}</ListItemIcon>
-							<ListItemText>{text}</ListItemText>
-						</ListItem>
+						<>
+							<ListItem
+								button
+								key={text}
+								onClick={() => history.push(path)}
+								className={location.pathname === path ? classes.active : null}>
+								<ListItemIcon>{icon}</ListItemIcon>
+								<ListItemText>{text}</ListItemText>
+							</ListItem>
+							<Divider />
+						</>
 					))}
 				</List>
 			</Drawer>

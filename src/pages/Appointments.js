@@ -69,10 +69,8 @@ export default function Appointments() {
 			console.log(e);
 		},
 		onCompleted: (d) => {
-			console.log(d);
 			setAppointmentList(d.getDoctorAppointments);
 		},
-		// variables: { doctorID: "09876543" },
 		variables: { doctorID: user },
 	});
 	const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
