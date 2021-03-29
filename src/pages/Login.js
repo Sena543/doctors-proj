@@ -3,6 +3,7 @@ import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { useMutation, gql } from "@apollo/client";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Bounce } from "react-activity";
 
 const LOGIN_USER = gql`
 	mutation($studentID: ID!, $password: String!) {
@@ -35,7 +36,7 @@ const useStyles = makeStyles({
 
 export default function Login() {
 	const classes = useStyles();
-	const [loginUser] = useMutation(LOGIN_USER, {
+	const [loginUser, { loading: loginLoading, error: loginError }] = useMutation(LOGIN_USER, {
 		onCompleted: (response) => {
 			// console.log(response?.loginUser?.token);
 			sessionStorage.setItem("auth_token", response?.loginUser?.token);
@@ -159,7 +160,7 @@ export default function Login() {
 						disableFocusRipple
 						variant="contained"
 						color="primary">
-						Login
+						{loginLoading ? <Bounce color="#fff" /> : "Login"}
 					</Button>
 				</form>
 				<div style={{ position: "relative", top: "20%", right: "1%" }}>
