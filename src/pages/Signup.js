@@ -4,6 +4,7 @@ import { Add, Visibility, VisibilityOff } from "@material-ui/icons";
 import React, { useState } from "react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
+import { Bounce } from "react-activity";
 
 const SIGNUP_DOCTOR = gql`
 	mutation(
@@ -70,7 +71,7 @@ const useStyles = makeStyles({
 
 export default function Signup() {
 	const classes = useStyles();
-	const [addNewDoctor] = useMutation(SIGNUP_DOCTOR, {
+	const [addNewDoctor, { loading }] = useMutation(SIGNUP_DOCTOR, {
 		onCompleted: () => {
 			window.location = "/login";
 		},
@@ -258,7 +259,7 @@ export default function Signup() {
 					disableFocusRipple
 					variant="contained"
 					color="primary">
-					Sign Up
+					{loading ? <Bounce color="#fff" /> : "Sign Up"}
 				</Button>
 			</form>
 			<div style={{ position: "relative", top: "20%", right: "1%", margin: "4em" }}>
