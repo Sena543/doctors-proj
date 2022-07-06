@@ -12,10 +12,10 @@ import GlobalIDContext from "./context/UserID";
 import { onError } from "@apollo/client/link/error";
 import Signup from "./pages/Signup";
 import ChangeSchedule from "./pages/ChangeSchedule";
+import SearchResults from "./components/confirmation/SearchResults";
+import Search from './components/confirmation/Search'
 
-const uri = "https://immense-savannah-88207.herokuapp.com";
-// const uri: "http://localhost:9000/
-const httpLink = createHttpLink({ uri });
+const httpLink = createHttpLink({ uri: process.env.REACT_APP_BACKEND_URI});
 const authLink = setContext((_, { headers }) => {
 	// get the authentication token from local storage if it exists
 	const token = sessionStorage.getItem("auth_token");
@@ -66,6 +66,12 @@ function App() {
 				<GlobalIDContext.Provider value={{ user }}>
 					<Router>
 						<Switch>
+							<Route path='/get-appointment'>
+								<Search/>
+							</Route>
+							<Route path='/confirm-appointment'>
+								<SearchResults/>
+							</Route>
 							<Route path="/login">{isLoggedIn ? <Redirect to="/" /> : <Login />}</Route>
 							<Route path="/signup">
 								<Signup />
