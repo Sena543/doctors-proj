@@ -64,7 +64,7 @@ export default function Appointments() {
 	const classes = useStyles();
 	const { user } = useContext(GlobalIDContext);
 	const [appointmentList, setAppointmentList] = useState([]);
-	const { loading, error, data } = useQuery(GET_DOCTOR_APPOINTMENTS, {
+	const { loading, error,} = useQuery(GET_DOCTOR_APPOINTMENTS, {
 		onError: (e) => {
 			console.log(e);
 		},

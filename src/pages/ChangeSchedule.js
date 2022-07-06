@@ -46,7 +46,7 @@ const useStyles = makeStyles({
 
 export default function ChangeSchedule() {
 	const { user } = useContext(GlobalIDContext);
-	const { loading, error, data } = useQuery(GET_WORKING_HOURS, {
+	const { loading, error, } = useQuery(GET_WORKING_HOURS, {
 		variables: { doctorID: user },
 		onCompleted: (d) => {
 			setworkingHours(d?.getWorkingHours?.timesAvailable);

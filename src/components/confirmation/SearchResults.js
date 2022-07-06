@@ -31,7 +31,7 @@ function SearchResults(props) {
 	const personData = props.history.location.state;
 	const appointment = personData.appointmentList.sort((a, b) => b.appointmentDate - a.appointmentDate)[0];
 	const [disableButton, setdisableButton] = useState(false);
-	const [confirmArrival, { loading: arrivalConfirmation, data }] = useMutation(CONFIRM_ARRIVAL, {
+	const [confirmArrival, { loading: arrivalConfirmation, }] = useMutation(CONFIRM_ARRIVAL, {
 		onCompleted: (response) => {
 			// console.log(response);
 			setdisableButton(true);
