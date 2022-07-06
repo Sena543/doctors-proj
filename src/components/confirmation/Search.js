@@ -65,6 +65,7 @@ const useStyles = makeStyles({
 		width: "10em",
 	},
 });
+
 function Search(props) {
 	const { history } = props;
 	const [getUserIDData, { loading, data }] = useLazyQuery(GET_USER_ID, {
